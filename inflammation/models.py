@@ -38,6 +38,20 @@ def daily_min(data):
     """Calculate the daily min of a 2d inflammation data array."""
     return np.min(data, axis=0)
 
+def patient_normalise(data):
+    """Normalise patient data between 0 and 1 of a 2D inflammation data array."""
+    if not isinstance(data, np.ndarray):
+        raise TypeError('The provided data is not a numpy array')
+    if len(data.shape) != 2:
+        raise ValueError('Inflammation array should be a 2-dimensional')
+    if np.any(data < 0):
+        raise ValueError('Inflammation values should be non-negative')
+    data = np.nan_to_num(data)
+    max = np.max(data, axis=1)
+    norm = data / max[:, np.newaxis]
+    norm = np.nan_to_num(norm)
+    norm[norm<0] = 0
+    return norm
 
 # TODO(lesson-design) Add Patient class
 # TODO(lesson-design) Implement data persistence
